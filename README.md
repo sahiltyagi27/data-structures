@@ -38,3 +38,14 @@ Read the full study notes here:
 - Graphs model relationships.
 - Heaps are useful for priority queues and top-K problems.
 
+## LeetCode Mapping
+
+| Data Structure | Example Problem |
+|---|---|
+| Stack | Valid Parentheses |
+| Queue / BFS | Number of Islands |
+| Heap | Top K Frequent Elements |
+| Graph | Course Schedule |
+| Map / Set | Two Sum |
+| Tree | Binary Tree Level Order Traversal |
+| Linked List | Reverse Linked List |
