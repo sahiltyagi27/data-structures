@@ -196,6 +196,58 @@ task := heap.Pop(pq).(Task)
 
 ---
 
+## 9. LRU Cache — `structures/lru_cache.go`
+
+LRU means Least Recently Used.
+
+When the cache is full, it evicts the item that has not been used for the longest time.
+
+Implementation idea:
+
+- hash map gives O(1) key lookup
+- doubly linked list keeps recency order
+- front = most recently used
+- back = least recently used
+
+Operations:
+
+| Operation | Cost |
+|---|---|
+| Get | O(1) |
+| Put | O(1) |
+
+Interview line:
+
+> LRU cache combines a map with a doubly linked list. The map finds nodes quickly, and the list moves recently used nodes to the front while evicting from the back.
+
+---
+
+## 10. LFU Cache — `structures/lfu_cache.go`
+
+LFU means Least Frequently Used.
+
+When the cache is full, it evicts the item with the lowest access count. If multiple items have the same frequency, evict the least recently used among them.
+
+Implementation idea:
+
+- hash map gives O(1) key lookup
+- frequency map groups entries by access count
+- each frequency bucket keeps recency order
+- `minFreq` tracks the current lowest frequency
+
+Operations:
+
+| Operation | Cost |
+|---|---|
+| Get | O(1) |
+| Put | O(1) |
+
+Interview line:
+
+> LFU cache tracks both frequency and recency. The frequency decides which bucket to evict from, and recency breaks ties inside that bucket.
+
+---
+
 ## Quick Interview Summary
 
 | Structure | Main Idea | Typical Use |
@@ -210,4 +262,5 @@ task := heap.Pop(pq).(Task)
 | Tree | hierarchy | sorted/searchable hierarchical data |
 | Graph | nodes and edges | relationships and networks |
 | Heap | priority access | priority queues, top K |
-
+| LRU Cache | evict least recently used | cache with recency-based eviction |
+| LFU Cache | evict least frequently used | cache with frequency-based eviction |

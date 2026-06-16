@@ -21,6 +21,8 @@ go test ./...
 | Binary search tree | [structures/tree.go](structures/tree.go) |
 | Graph, BFS, DFS | [structures/graph.go](structures/graph.go) |
 | Heap / priority queue | [structures/heap.go](structures/heap.go) |
+| LRU cache | [structures/lru_cache.go](structures/lru_cache.go) |
+| LFU cache | [structures/lfu_cache.go](structures/lfu_cache.go) |
 
 ## Main Guide
 
@@ -37,6 +39,8 @@ Read the full study notes here:
 - Trees model hierarchy and ordered search.
 - Graphs model relationships.
 - Heaps are useful for priority queues and top-K problems.
+- LRU cache evicts the least recently used item.
+- LFU cache evicts the least frequently used item, breaking ties by recency.
 
 ## LeetCode Mapping
 
@@ -49,3 +53,5 @@ Read the full study notes here:
 | Map / Set | Two Sum |
 | Tree | Binary Tree Level Order Traversal |
 | Linked List | Reverse Linked List |
+| LRU Cache | LRU Cache |
+| LFU Cache | LFU Cache |

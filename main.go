@@ -38,4 +38,10 @@ func main() {
 
 	fmt.Println("\n=== Heap / Priority Queue ===")
 	structures.RunHeapDemo()
+
+	fmt.Println("\n=== LRU Cache ===")
+	structures.RunLRUCacheDemo()
+
+	fmt.Println("\n=== LFU Cache ===")
+	structures.RunLFUCacheDemo()
 }
