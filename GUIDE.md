@@ -89,7 +89,73 @@ Common uses:
 
 ---
 
-## 4. Queue — `structures/queue.go`
+## 4. Min Stack — `structures/min_stack.go`
+
+Min Stack is a stack that also supports `GetMin()` in O(1).
+
+Normal stack:
+
+```text
+Push -> O(1)
+Pop -> O(1)
+Top -> O(1)
+Find minimum -> O(n)
+```
+
+Min Stack:
+
+```text
+Push -> O(1)
+Pop -> O(1)
+Top -> O(1)
+GetMin -> O(1)
+```
+
+Implementation idea:
+
+```text
+values stack = all values
+mins stack   = current minimum at each stack level
+```
+
+When pushing:
+
+```text
+push value to values
+push min(value, currentMin) to mins
+```
+
+When popping:
+
+```text
+pop from both stacks
+```
+
+Example:
+
+```text
+push 5
+values: [5]
+mins:   [5]
+
+push 3
+values: [5, 3]
+mins:   [5, 3]
+
+push 7
+values: [5, 3, 7]
+mins:   [5, 3, 3]
+
+GetMin -> 3
+```
+
+Interview line:
+
+> I keep one stack for values and another stack for the minimum at each level. Every push stores the current minimum, so GetMin is just the top of the min stack.
+
+---
+
+## 5. Queue — `structures/queue.go`
 
 Queue means FIFO: First In, First Out.
 
@@ -107,7 +173,7 @@ Common uses:
 
 ---
 
-## 5. Hash Map and Set — `structures/hashmap_set.go`
+## 6. Hash Map and Set — `structures/hashmap_set.go`
 
 Hash map stores key-value pairs.
 
@@ -136,7 +202,7 @@ Use `struct{}` because it takes zero bytes.
 
 ---
 
-## 6. Tree — `structures/tree.go`
+## 7. Tree — `structures/tree.go`
 
 A tree is hierarchical data: root, children, descendants.
 
@@ -151,7 +217,7 @@ Average search in a balanced BST is O(log n). If the tree becomes a chain, worst
 
 ---
 
-## 7. Graph — `structures/graph.go`
+## 8. Graph — `structures/graph.go`
 
 A graph is nodes connected by edges.
 
@@ -176,7 +242,7 @@ Traversal:
 
 ---
 
-## 8. Heap / Priority Queue — `structures/heap.go`
+## 9. Heap / Priority Queue — `structures/heap.go`
 
 A heap keeps the highest or lowest priority item easy to access.
 
@@ -196,7 +262,7 @@ task := heap.Pop(pq).(Task)
 
 ---
 
-## 9. LRU Cache — `structures/lru_cache.go`
+## 10. LRU Cache — `structures/lru_cache.go`
 
 LRU means Least Recently Used.
 

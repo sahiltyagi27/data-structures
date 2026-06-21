@@ -16,6 +16,7 @@ go test ./...
 | Arrays and slices | [structures/array_slice.go](structures/array_slice.go) |
 | Linked list | [structures/linked_list.go](structures/linked_list.go) |
 | Stack | [structures/stack.go](structures/stack.go) |
+| Min Stack | [structures/min_stack.go](structures/min_stack.go) |
 | Queue | [structures/queue.go](structures/queue.go) |
 | Hash map and set | [structures/hashmap_set.go](structures/hashmap_set.go) |
 | Binary search tree | [structures/tree.go](structures/tree.go) |
@@ -36,6 +37,7 @@ Read the full study notes here:
 - Slices are Go's everyday dynamic sequence type.
 - Maps provide average O(1) key lookup.
 - Stacks are LIFO; queues are FIFO.
+- Min Stack supports `GetMin` in O(1) using an extra stack.
 - Trees model hierarchy and ordered search.
 - Graphs model relationships.
 - Heaps are useful for priority queues and top-K problems.
@@ -47,6 +49,7 @@ Read the full study notes here:
 | Data Structure | Example Problem |
 |---|---|
 | Stack | Valid Parentheses |
+| Min Stack | Min Stack |
 | Queue / BFS | Number of Islands |
 | Heap | Top K Frequent Elements |
 | Graph | Course Schedule |
