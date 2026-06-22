@@ -32,6 +32,16 @@
 //   - function call stack
 //   - expression parsing
 //   - DFS traversal
+//
+// Interview note:
+//
+//	This custom Stack type is useful for learning how a stack works.
+//	In DSA interviews, if stack is only a helper, use a slice directly:
+//
+//	    stack := []int{}
+//	    stack = append(stack, value)
+//	    top := stack[len(stack)-1]
+//	    stack = stack[:len(stack)-1]
 
 package structures
 

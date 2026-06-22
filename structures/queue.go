@@ -25,6 +25,16 @@
 //
 // This implementation keeps a head index so Dequeue is O(1). Removing from the
 // front with items = items[1:] is simple, but can keep old array memory alive.
+//
+// Interview note:
+//
+//	This custom Queue type is useful for learning how a queue works.
+//	In DSA interviews, if queue is only a BFS helper, use a slice directly:
+//
+//	    queue := []int{start}
+//	    node := queue[0]
+//	    queue = queue[1:]
+//	    queue = append(queue, next)
 
 package structures
 

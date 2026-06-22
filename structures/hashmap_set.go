@@ -23,6 +23,16 @@
 //	"Mumbai" -> exists
 //
 // Duplicate Add("Delhi") has no effect because map keys are unique.
+//
+// Interview note:
+//
+//	This custom Set type is useful for learning how a set works.
+//	In DSA interviews, prefer a plain map or bool slice:
+//
+//	    visited := map[string]bool{}
+//	    visited["Delhi"] = true
+//
+//	    visited := make([]bool, n) // when nodes are 0..n-1
 
 package structures
 

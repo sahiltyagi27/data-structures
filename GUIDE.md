@@ -5,6 +5,29 @@
 
 ---
 
+## DSA Interview Coding Rule
+
+This repo includes custom implementations because you are learning data structures.
+
+In live DSA interviews, keep the solution short:
+
+```text
+Queue   = []int, append to push, queue[0] + queue = queue[1:] to pop
+Stack   = []int, append to push, stack[len(stack)-1] + stack = stack[:len(stack)-1] to pop
+Set     = map[T]bool, or []bool for numbered nodes
+Graph   = [][]int when nodes are 0..n-1
+Visited = []bool when nodes are 0..n-1
+```
+
+Interview rule:
+
+```text
+If problem asks "implement stack/queue/set" -> write the data structure.
+If problem uses stack/queue/set as a helper -> use slices/maps.
+```
+
+---
+
 ## What Are Data Structures?
 
 A data structure is a way to organize and store data so operations like lookup, insert, delete, traversal, and update can be done efficiently.
@@ -367,6 +390,88 @@ Adjacency list representation:
 6 -> [2]
 ```
 
+Which Go representation should I use?
+
+Use this rule:
+
+```text
+If nodes are 0 to n-1 -> use int + [][]int
+If nodes are random IDs/strings -> use map
+```
+
+For LeetCode/interviews, most graph problems give nodes like:
+
+```text
+0, 1, 2, 3, 4
+```
+
+So use this 90% of the time:
+
+```go
+graph := make([][]int, n)
+visited := make([]bool, n)
+```
+
+Example:
+
+```go
+n := 5
+graph := make([][]int, n)
+
+graph[0] = append(graph[0], 1)
+graph[0] = append(graph[0], 2)
+graph[1] = append(graph[1], 3)
+```
+
+This means:
+
+```text
+0 -> 1
+0 -> 2
+1 -> 3
+```
+
+Use `map[int][]int` when:
+
+```text
+nodes are not continuous from 0 to n-1
+some nodes may be missing
+IDs are like 101, 205, 999
+you do not know n clearly
+```
+
+Use `map[string][]string` when nodes are strings:
+
+```go
+graph := map[string][]string{}
+
+graph["Delhi"] = append(graph["Delhi"], "Gurgaon")
+graph["Gurgaon"] = append(graph["Gurgaon"], "Noida")
+```
+
+For Course Schedule, always use:
+
+```go
+graph := make([][]int, numCourses)
+indegree := make([]int, numCourses)
+```
+
+Because courses are numbered:
+
+```text
+0 to numCourses-1
+```
+
+Memory rule:
+
+```text
+Course Schedule / numbered nodes -> [][]int
+Random integer IDs               -> map[int][]int
+String nodes                     -> map[string][]string
+Visited for 0..n-1               -> []bool
+Visited for random/string nodes  -> map[id]bool
+```
+
 Common uses:
 
 - social networks
@@ -385,6 +490,57 @@ Traversal:
 
 - BFS uses a queue and explores level by level
 - DFS uses a stack or recursion and explores deep first
+
+Interview implementation shortcut:
+
+You do not need to implement a custom queue or stack before writing BFS/DFS.
+Use Go slices directly.
+
+BFS queue with slice:
+
+```go
+queue := []int{start}
+
+for len(queue) > 0 {
+	node := queue[0]
+	queue = queue[1:]
+
+	for _, next := range graph[node] {
+		if visited[next] {
+			continue
+		}
+		visited[next] = true
+		queue = append(queue, next)
+	}
+}
+```
+
+DFS stack with slice:
+
+```go
+stack := []int{start}
+
+for len(stack) > 0 {
+	node := stack[len(stack)-1]
+	stack = stack[:len(stack)-1]
+
+	if visited[node] {
+		continue
+	}
+	visited[node] = true
+
+	for _, next := range graph[node] {
+		stack = append(stack, next)
+	}
+}
+```
+
+Memory rule:
+
+```text
+Queue = take from front, append to back
+Stack = take from back, append to back
+```
 
 ---
 

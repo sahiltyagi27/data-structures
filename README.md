@@ -2,6 +2,20 @@
 
 Small Go implementations of common data structures for interview preparation.
 
+## Interview Coding Rule
+
+This repo implements stack, queue, set, heap, and caches so you can learn how they work.
+
+For DSA live coding, prefer vanilla Go unless the interviewer explicitly asks you to implement the data structure:
+
+```text
+Queue   = []int, append to push, queue[0] + queue = queue[1:] to pop
+Stack   = []int, append to push, stack[len(stack)-1] + stack = stack[:len(stack)-1] to pop
+Set     = map[T]bool, or []bool for 0..n-1 nodes
+Graph   = [][]int for 0..n-1 nodes
+Visited = []bool for 0..n-1 nodes
+```
+
 ## Run
 
 ```bash

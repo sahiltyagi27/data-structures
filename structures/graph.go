@@ -36,6 +36,33 @@
 //
 // This is an adjacency-list graph: each node maps to its neighboring nodes.
 //
+// Representation rule:
+//
+//	If nodes are 0 to n-1, use:
+//
+//	    graph := make([][]int, n)
+//	    visited := make([]bool, n)
+//
+//	If nodes are random integer IDs, use:
+//
+//	    graph := map[int][]int{}
+//	    visited := map[int]bool{}
+//
+//	If nodes are strings, use:
+//
+//	    graph := map[string][]string{}
+//	    visited := map[string]bool{}
+//
+// Interview default:
+//
+//	Most LeetCode graph problems use nodes 0..n-1, so start with [][]int
+//	and []bool unless the input uses strings or sparse/random IDs.
+//
+// Course Schedule:
+//
+//	graph := make([][]int, numCourses)
+//	indegree := make([]int, numCourses)
+//
 // Example adjacency list for the visual above:
 //
 //	1 -> [3, 2]
@@ -103,24 +130,33 @@ func (g *Graph) Neighbors(node string) []string {
 // Queue flow:
 //
 //	pop node -> visit neighbors -> enqueue unseen neighbors
+//
+// Interview note:
+//
+//	Use a slice as a queue so you do not need to implement a separate Queue
+//	type during a coding round.
+//
+//	queue := []string{start}
+//	node := queue[0]
+//	queue = queue[1:]
 func (g *Graph) BFS(start string) []string {
 	var order []string
-	visited := NewSet[string]()
-	var queue Queue[string]
+	visited := map[string]bool{}
+	queue := []string{start}
 
-	visited.Add(start)
-	queue.Enqueue(start)
+	visited[start] = true
 
-	for queue.Len() > 0 {
-		node, _ := queue.Dequeue()
+	for len(queue) > 0 {
+		node := queue[0]
+		queue = queue[1:]
 		order = append(order, node)
 
 		for _, next := range g.edges[node] {
-			if visited.Has(next) {
+			if visited[next] {
 				continue
 			}
-			visited.Add(next)
-			queue.Enqueue(next)
+			visited[next] = true
+			queue = append(queue, next)
 		}
 	}
 
@@ -144,23 +180,32 @@ func (g *Graph) BFS(start string) []string {
 // Stack flow:
 //
 //	pop node -> visit -> push neighbors -> continue deep
+//
+// Interview note:
+//
+//	Use a slice as a stack so you do not need to implement a separate Stack
+//	type during a coding round.
+//
+//	stack := []string{start}
+//	node := stack[len(stack)-1]
+//	stack = stack[:len(stack)-1]
 func (g *Graph) DFS(start string) []string {
 	var order []string
-	visited := NewSet[string]()
-	var stack Stack[string]
+	visited := map[string]bool{}
+	stack := []string{start}
 
-	stack.Push(start)
-	for stack.Len() > 0 {
-		node, _ := stack.Pop()
-		if visited.Has(node) {
+	for len(stack) > 0 {
+		node := stack[len(stack)-1]
+		stack = stack[:len(stack)-1]
+		if visited[node] {
 			continue
 		}
 
-		visited.Add(node)
+		visited[node] = true
 		order = append(order, node)
 
 		for i := len(g.edges[node]) - 1; i >= 0; i-- {
-			stack.Push(g.edges[node][i])
+			stack = append(stack, g.edges[node][i])
 		}
 	}
 
