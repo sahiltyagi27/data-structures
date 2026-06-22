@@ -4,9 +4,38 @@
 //   Fixed-size sequence. The length is part of the type: [3]int and [4]int are
 //   different types.
 //
+// Array visual:
+//
+//	index:   0    1    2
+//	        +----+----+----+
+//	value:  | 10 | 20 | 30 |
+//	        +----+----+----+
+//
+// Type includes length:
+//
+//	[3]int != [4]int
+//
 // Slice:
 //   Dynamic view over an underlying array. Slices are used much more often than
 //   arrays in day-to-day Go.
+//
+// Slice visual:
+//
+//	scores := []int{70, 80, 90}
+//
+//	slice header:
+//	  pointer -> backing array
+//	  len     -> visible elements
+//	  cap     -> space available before reallocating
+//
+//	backing array:
+//	index:   0    1    2    3
+//	        +----+----+----+------+
+//	value:  | 70 | 80 | 90 | free |
+//	        +----+----+----+------+
+//
+// Slicing usually does not copy. It creates another view over the same backing
+// array.
 //
 // Interview line:
 //   In Go, arrays are fixed-size values; slices are flexible descriptors over

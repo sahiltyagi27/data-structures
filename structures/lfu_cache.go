@@ -5,6 +5,22 @@
 // If multiple items have the same frequency, evict the least recently used
 // item among that frequency.
 //
+// Visual:
+//
+//	items map:
+//	  key -> pointer to entry inside a frequency list
+//
+//	frequency lists:
+//
+//	freq=1: front -> [key=2] -> [key=5] <- back
+//	freq=2: front -> [key=1]
+//	freq=3: front -> [key=9]
+//
+// minFreq tells which frequency bucket to evict from.
+//
+// If minFreq=1, evict from the back of freq=1 because that is the least
+// recently used item among the least frequently used items.
+//
 // Data structures:
 //   - map[key]*node gives O(1) lookup
 //   - map[frequency]*list stores nodes grouped by frequency
@@ -30,6 +46,20 @@ type LFUCache struct {
 	freqs    map[int]*list.List
 }
 
+// NewLFUCache creates the maps used for O(1) access.
+//
+// items:
+//
+//	key -> pointer to entry inside a frequency list
+//
+// freqs:
+//
+//	frequency -> list of entries with that frequency
+//
+// Each frequency list is ordered by recency:
+//
+//	front = most recently used within this frequency
+//	back  = least recently used within this frequency
 func NewLFUCache(capacity int) *LFUCache {
 	return &LFUCache{
 		capacity: capacity,
@@ -38,6 +68,13 @@ func NewLFUCache(capacity int) *LFUCache {
 	}
 }
 
+// Get returns a value and increases that key's frequency.
+//
+// Example:
+//
+//	key 1 freq=1
+//	Get(1)
+//	key 1 moves from freq list 1 to freq list 2
 func (c *LFUCache) Get(key int) (int, bool) {
 	element, ok := c.items[key]
 	if !ok {
@@ -49,6 +86,17 @@ func (c *LFUCache) Get(key int) (int, bool) {
 	return entry.value, true
 }
 
+// Put inserts or updates a key.
+//
+// If key exists:
+//
+//	update value
+//	increase frequency
+//
+// If key is new and cache is full:
+//
+//	evict from minFreq list
+//	insert new key with freq=1
 func (c *LFUCache) Put(key, value int) {
 	if c.capacity <= 0 {
 		return
@@ -71,6 +119,17 @@ func (c *LFUCache) Put(key, value int) {
 	c.items[key] = c.freqs[1].PushFront(entry)
 }
 
+// incrementFrequency moves an entry to the next frequency bucket.
+//
+// Before:
+//
+//	freqs[1]: front -> [key=1] -> ...
+//
+// After Get(1):
+//
+//	freqs[2]: front -> [key=1]
+//
+// If the old minFreq list becomes empty, minFreq moves up.
 func (c *LFUCache) incrementFrequency(element *list.Element) {
 	entry := element.Value.(*lfuEntry)
 	oldFreq := entry.freq
@@ -89,6 +148,15 @@ func (c *LFUCache) incrementFrequency(element *list.Element) {
 	c.items[entry.key] = c.freqs[entry.freq].PushFront(entry)
 }
 
+// evictLFU removes the least frequently used key.
+//
+// If multiple keys have the same min frequency, evict the least recently used
+// one from that frequency list.
+//
+// In container/list:
+//
+//	Front = most recently used
+//	Back  = least recently used
 func (c *LFUCache) evictLFU() {
 	leastFreqList := c.freqs[c.minFreq]
 	victim := leastFreqList.Back() // least recently used within min frequency
@@ -101,6 +169,7 @@ func (c *LFUCache) evictLFU() {
 	delete(c.items, entry.key)
 }
 
+// ensureFreqList lazily creates a list for the frequency.
 func (c *LFUCache) ensureFreqList(freq int) {
 	if c.freqs[freq] == nil {
 		c.freqs[freq] = list.New()

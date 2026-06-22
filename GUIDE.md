@@ -35,9 +35,26 @@ Array:
 
 > Fixed-size sequence. In Go, `[3]int` and `[4]int` are different types.
 
+Visual:
+
+```text
+index:   0    1    2
+        +----+----+----+
+value:  | 10 | 20 | 30 |
+        +----+----+----+
+```
+
 Slice:
 
 > Dynamic view over an array. Most Go code uses slices instead of arrays.
+
+Slice header:
+
+```text
+pointer -> backing array
+len     -> visible elements
+cap     -> available space before reallocating
+```
 
 ```go
 arr := [3]int{1, 2, 3}
@@ -59,6 +76,44 @@ Important slice fields:
 
 A linked list stores values in nodes. Each node points to the next node.
 
+Visual shape:
+
+```text
+head
+ |
+ v
+[10] -> [20] -> [30] -> nil
+```
+
+Each node contains:
+
+```text
+Value
+Next pointer
+```
+
+Push front:
+
+```text
+Before:
+head -> [20] -> [30] -> nil
+
+PushFront(10):
+new node points to old head
+head moves to new node
+
+After:
+head -> [10] -> [20] -> [30] -> nil
+```
+
+The Go one-liner:
+
+```go
+l.head = &ListNode{Value: value, Next: l.head}
+```
+
+This is safe because Go evaluates the right side first. The old `l.head` is stored in `Next`, then `l.head` is updated.
+
 Best when:
 
 - you often insert/delete near known nodes
@@ -73,6 +128,17 @@ Tradeoff:
 ## 3. Stack — `structures/stack.go`
 
 Stack means LIFO: Last In, First Out.
+
+Visual:
+
+```text
+top
+ |
+ v
+[C]  <- popped first
+[B]
+[A]
+```
 
 ```go
 stack.Push("A")
@@ -159,6 +225,15 @@ Interview line:
 
 Queue means FIFO: First In, First Out.
 
+Visual:
+
+```text
+front                    back
+  |                       |
+  v                       v
+[A] ----> [B] ----> [C] ----> nil
+```
+
 ```go
 queue.Enqueue("A")
 queue.Enqueue("B")
@@ -176,6 +251,14 @@ Common uses:
 ## 6. Hash Map and Set — `structures/hashmap_set.go`
 
 Hash map stores key-value pairs.
+
+Visual:
+
+```text
+key       value
+"Asha" -> 28
+"Neha" -> 26
+```
 
 ```go
 ages := map[string]int{"Asha": 28}
@@ -198,6 +281,13 @@ visited["Delhi"] = struct{}{}
 _, ok := visited["Delhi"]
 ```
 
+Set visual:
+
+```text
+"Delhi"  -> exists
+"Mumbai" -> exists
+```
+
 Use `struct{}` because it takes zero bytes.
 
 ---
@@ -205,6 +295,19 @@ Use `struct{}` because it takes zero bytes.
 ## 7. Tree — `structures/tree.go`
 
 A tree is hierarchical data: root, children, descendants.
+
+Visual:
+
+```text
+         root
+          |
+          v
+         [8]
+        /   \
+      [3]   [10]
+     /  \      \
+   [1]  [6]    [14]
+```
 
 Binary Search Tree rule:
 
@@ -220,6 +323,49 @@ Average search in a balanced BST is O(log n). If the tree becomes a chain, worst
 ## 8. Graph — `structures/graph.go`
 
 A graph is nodes connected by edges.
+
+Visual:
+
+```text
+Nodes / vertices:
+
+       (1)
+      /   \
+    (3)   (2) -- (6)
+   /   \  /
+ (5)   (4)
+
+Edges:
+
+1 -- 3
+1 -- 2
+3 -- 5
+3 -- 4
+4 -- 2
+2 -- 6
+```
+
+Vocabulary:
+
+```text
+node / vertex = item in the graph
+edge          = connection between two nodes
+directed      = one-way connection, A -> B
+undirected    = two-way connection, A -- B
+weighted      = edge has cost/distance
+unweighted    = edge is just a connection
+```
+
+Adjacency list representation:
+
+```text
+1 -> [3, 2]
+2 -> [1, 4, 6]
+3 -> [1, 5, 4]
+4 -> [3, 2]
+5 -> [3]
+6 -> [2]
+```
 
 Common uses:
 
@@ -245,6 +391,25 @@ Traversal:
 ## 9. Heap / Priority Queue — `structures/heap.go`
 
 A heap keeps the highest or lowest priority item easy to access.
+
+Visual tree:
+
+```text
+        [10]
+       /    \
+     [5]    [8]
+    /  \
+  [1]  [3]
+```
+
+Same heap as array:
+
+```text
+index:  0   1   2   3   4
+       +---+---+---+---+---+
+value: |10 | 5 | 8 | 1 | 3 |
+       +---+---+---+---+---+
+```
 
 Priority queue examples:
 

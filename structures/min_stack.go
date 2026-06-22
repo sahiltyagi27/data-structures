@@ -2,6 +2,24 @@
 //
 // A Min Stack supports normal stack operations plus GetMin in O(1).
 //
+// Visual:
+//
+//	Push 5, Push 3, Push 7
+//
+//	values stack:
+//	top -> [7]
+//	       [3]
+//	       [5]
+//
+//	mins stack:
+//	top -> [3]  <- min at level with 7
+//	       [3]  <- min at level with 3
+//	       [5]  <- min at level with 5
+//
+// GetMin reads the top of mins:
+//
+//	GetMin() -> 3
+//
 // The trick is to keep two stacks:
 //   - values stores all pushed values
 //   - mins stores the minimum value at each stack level
@@ -21,6 +39,23 @@ type MinStack struct {
 	mins   []int
 }
 
+// Push stores the value and the minimum at this stack level.
+//
+// Example:
+//
+//	Push(5)
+//	values: [5]
+//	mins:   [5]
+//
+//	Push(3)
+//	values: [5, 3]
+//	mins:   [5, 3]
+//
+//	Push(7)
+//	values: [5, 3, 7]
+//	mins:   [5, 3, 3]
+//
+// GetMin is O(1) because the current min is always at the top of mins.
 func (s *MinStack) Push(value int) {
 	s.values = append(s.values, value)
 
@@ -33,6 +68,10 @@ func (s *MinStack) Push(value int) {
 	s.mins = append(s.mins, currentMin)
 }
 
+// Pop removes from both stacks.
+//
+// values and mins must stay the same length so each value has a matching
+// "minimum at this level" entry.
 func (s *MinStack) Pop() (int, bool) {
 	if len(s.values) == 0 {
 		return 0, false
@@ -46,6 +85,7 @@ func (s *MinStack) Pop() (int, bool) {
 	return value, true
 }
 
+// Top returns the last pushed value without removing it.
 func (s *MinStack) Top() (int, bool) {
 	if len(s.values) == 0 {
 		return 0, false
@@ -53,6 +93,7 @@ func (s *MinStack) Top() (int, bool) {
 	return s.values[len(s.values)-1], true
 }
 
+// GetMin returns the current minimum in O(1).
 func (s *MinStack) GetMin() (int, bool) {
 	if len(s.mins) == 0 {
 		return 0, false

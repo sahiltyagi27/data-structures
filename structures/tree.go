@@ -2,9 +2,33 @@
 //
 // A tree is hierarchical: one root, children below it.
 //
+// Tree visual:
+//
+//	         root
+//	          |
+//	          v
+//	         [8]
+//	        /   \
+//	      [3]   [10]
+//	     /  \      \
+//	   [1]  [6]    [14]
+//
+// Vocabulary:
+//
+//	root   = top node
+//	child  = node below another node
+//	parent = node above another node
+//	leaf   = node with no children
+//
 // Binary Search Tree:
 //   Left child values are smaller than the node.
 //   Right child values are larger than the node.
+//
+// BST decision flow:
+//
+//	value < node.Value -> go left
+//	value > node.Value -> go right
+//	value == node.Value -> found / duplicate ignored here
 //
 // Average search/insert: O(log n) when balanced.
 // Worst case: O(n) when the tree becomes a chain.
@@ -23,10 +47,29 @@ type BinarySearchTree struct {
 	root *TreeNode
 }
 
+// Insert adds a value while preserving the BST rule.
+//
+// BST rule:
+//
+//	   [8]
+//	  /   \
+//	[3]   [10]
+//
+// values smaller than 8 go left.
+// values larger than 8 go right.
 func (t *BinarySearchTree) Insert(value int) {
 	t.root = insertNode(t.root, value)
 }
 
+// insertNode returns the subtree root after insertion.
+//
+// This recursive shape works because each call says:
+//
+//	"insert into my left or right subtree, then return me"
+//
+// Empty spot:
+//
+//	nil -> [value]
 func insertNode(node *TreeNode, value int) *TreeNode {
 	if node == nil {
 		return &TreeNode{Value: value}
@@ -39,6 +82,19 @@ func insertNode(node *TreeNode, value int) *TreeNode {
 	return node
 }
 
+// Contains searches by walking left or right.
+//
+// Example search for 6:
+//
+//	   [8]
+//	  /
+//	[3]
+//	  \
+//	  [6]
+//
+// 6 < 8, go left.
+// 6 > 3, go right.
+// 6 == 6, found.
 func (t *BinarySearchTree) Contains(value int) bool {
 	current := t.root
 	for current != nil {
@@ -54,6 +110,19 @@ func (t *BinarySearchTree) Contains(value int) bool {
 	return false
 }
 
+// InOrder returns values in sorted order for a BST.
+//
+// Traversal order:
+//
+//	left subtree -> node -> right subtree
+//
+// Example:
+//
+//	   [2]
+//	  /   \
+//	[1]   [3]
+//
+// InOrder -> [1, 2, 3]
 func (t *BinarySearchTree) InOrder() []int {
 	var values []int
 	var walk func(*TreeNode)

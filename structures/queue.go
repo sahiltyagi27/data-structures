@@ -2,6 +2,22 @@
 //
 // Queue follows FIFO: First In, First Out.
 //
+// Visual:
+//
+//	front                    back
+//	  |                       |
+//	  v                       v
+//	[A] ----> [B] ----> [C] ----> nil
+//
+// Enqueue adds at the back:
+//
+//	[A] -> [B] -> [C] -> [D]
+//
+// Dequeue removes from the front:
+//
+//	Dequeue() -> A
+//	front moves to B
+//
 // Common uses:
 //   - task processing
 //   - BFS traversal
@@ -19,10 +35,45 @@ type Queue[T any] struct {
 	head  int
 }
 
+// Enqueue adds a value at the back of the queue.
+//
+// Before:
+//
+//	front          back
+//	  |             |
+//	  v             v
+//	[A] -> [B]
+//
+// Enqueue("C"):
+//
+//	front                 back
+//	  |                    |
+//	  v                    v
+//	[A] -> [B] -> [C]
 func (q *Queue[T]) Enqueue(value T) {
 	q.items = append(q.items, value)
 }
 
+// Dequeue removes a value from the front of the queue.
+//
+// Before:
+//
+//	front                 back
+//	  |                    |
+//	  v                    v
+//	[A] -> [B] -> [C]
+//
+// Dequeue() returns A.
+//
+// After:
+//
+//	       front          back
+//	         |             |
+//	         v             v
+//	[A] -> [B] -> [C]
+//
+// The old A remains in the backing slice until occasional compaction, but
+// q.head moves forward so logically B is now the front.
 func (q *Queue[T]) Dequeue() (T, bool) {
 	if q.head >= len(q.items) {
 		var zero T
@@ -41,6 +92,11 @@ func (q *Queue[T]) Dequeue() (T, bool) {
 	return value, true
 }
 
+// Len returns the logical queue length.
+//
+//	items length = 5
+//	head = 2
+//	logical length = 5 - 2 = 3
 func (q *Queue[T]) Len() int {
 	return len(q.items) - q.head
 }

@@ -4,6 +4,21 @@
 // When the cache is full, evict the item that has not been used for the
 // longest time.
 //
+// Visual:
+//
+//	map:
+//	  key -> pointer to linked-list node
+//
+//	list:
+//	  head <-> [most recent] <-> [...] <-> [least recent] <-> tail
+//
+// Example after Put(1), Put(2), Get(1):
+//
+//	head <-> [1] <-> [2] <-> tail
+//
+// key 1 is most recently used because Get(1) moved it to the front.
+// If capacity is full, evict tail.prev.
+//
 // Data structures:
 //   - map[key]*node gives O(1) lookup
 //   - doubly linked list keeps recency order
@@ -29,6 +44,18 @@ type LRUCache struct {
 	tail     *lruNode
 }
 
+// NewLRUCache creates a cache with dummy head/tail nodes.
+//
+// Empty list shape:
+//
+//	head <-> tail
+//
+// After Put(1), Put(2):
+//
+//	head <-> [2] <-> [1] <-> tail
+//
+// Front = most recently used.
+// Back = least recently used.
 func NewLRUCache(capacity int) *LRUCache {
 	head := &lruNode{}
 	tail := &lruNode{}
@@ -43,6 +70,15 @@ func NewLRUCache(capacity int) *LRUCache {
 	}
 }
 
+// Get returns the value and marks the key as most recently used.
+//
+// Before Get(1):
+//
+//	head <-> [2] <-> [1] <-> tail
+//
+// After Get(1):
+//
+//	head <-> [1] <-> [2] <-> tail
 func (c *LRUCache) Get(key int) (int, bool) {
 	node, ok := c.items[key]
 	if !ok {
@@ -53,6 +89,17 @@ func (c *LRUCache) Get(key int) (int, bool) {
 	return node.value, true
 }
 
+// Put inserts or updates a key.
+//
+// If key exists:
+//
+//	update value
+//	move node to front
+//
+// If key is new and cache is full:
+//
+//	evict node before tail
+//	add new node after head
 func (c *LRUCache) Put(key, value int) {
 	if c.capacity <= 0 {
 		return
@@ -73,11 +120,23 @@ func (c *LRUCache) Put(key, value int) {
 	c.addToFront(node)
 }
 
+// moveToFront refreshes recency.
+//
+// remove from current position, then add right after head.
 func (c *LRUCache) moveToFront(node *lruNode) {
 	c.remove(node)
 	c.addToFront(node)
 }
 
+// addToFront inserts node after dummy head.
+//
+// Before:
+//
+//	head <-> first
+//
+// After:
+//
+//	head <-> node <-> first
 func (c *LRUCache) addToFront(node *lruNode) {
 	first := c.head.next
 	node.prev = c.head
@@ -86,11 +145,27 @@ func (c *LRUCache) addToFront(node *lruNode) {
 	first.prev = node
 }
 
+// remove detaches node from the doubly linked list.
+//
+// Before:
+//
+//	prev <-> node <-> next
+//
+// After:
+//
+//	prev <---------> next
 func (c *LRUCache) remove(node *lruNode) {
 	node.prev.next = node.next
 	node.next.prev = node.prev
 }
 
+// evictLRU removes the node before dummy tail.
+//
+// Shape:
+//
+//	head <-> most recent ... least recent <-> tail
+//
+// tail.prev is the least recently used real node.
 func (c *LRUCache) evictLRU() {
 	lru := c.tail.prev
 	c.remove(lru)
